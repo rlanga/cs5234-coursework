@@ -59,16 +59,22 @@ def convert_to_weighted_network(rdd, drange=None):
 
 # Q3.1: replace pass with your code
 def get_out_degrees(rdd):
-    pass
+    return rdd.map(lambda node: (node[0], node[2])) \
+        .reduceByKey(lambda x, y: x + y) \
+        .map(lambda node: (node[1], node[0])) \
+        .sortBy(lambda node: e, ascending=False)
 
 # Q3.2: replace pass with your code         
 def get_in_degrees(rdd):
-    pass
+    return rdd.map(lambda node: (node[1], node[2])) \
+        .reduceByKey(lambda x, y: x + y) \
+        .map(lambda node: (node[1], node[0])) \
+        .sortBy(lambda node: e, ascending=False)
 
 # Q4.1: replace pass with your code            
 def get_out_degree_dist(rdd):
-    pass
+    return rdd.reduceByKey(lambda x, y: x + y)
 
 # Q4.2: replace pass with your code
 def get_in_degree_dist(rdd):
-    pass
+    return rdd.reduceByKey(lambda x, y: x + y)
