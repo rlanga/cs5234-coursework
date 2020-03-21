@@ -19,28 +19,32 @@ import unittest
 
 
 class TestProjectCode(unittest.TestCase):
-    pretty = lambda x: '\n'.join(str(e) for e in x) if x else None
-    pretty_rdd = lambda x: pretty(x.collect()) if x else None
-
-    def utf8_decode_and_filter(rdd):
-        def utf_decode(s):
-            try:
-                return str(s, 'utf-8')
-            except:
-                pass
-        return rdd.map(lambda x: utf_decode(x[1])).filter(lambda x: x != None)
 
     @classmethod
     def setUpClass(cls):
-    # Comment the following two lines out if using 
-    # from Spark notebook
+        # Comment the following two lines out if using 
+        # from Spark notebook
         conf = SparkConf().setAppName("Enron")
         cls.sc = SparkContext(conf = conf)
 
+        pretty = lambda x: '\n'.join(str(e) for e in x) if x else None
+        cls.pretty_rdd = lambda x: pretty(x.collect()) if x else None
+
+        def utf8_decode_and_filter(g, rdd):
+            def utf_decode(s):
+                try:
+                    return str(s, 'utf-8')
+                except:
+                    pass
+            return rdd.map(lambda g, x: utf_decode(x[1])).filter(lambda x: x != None)
+        cls.utf8_decode_and_filter = utf8_decode_and_filter
+
     def test_Q1(self):
-        result = pretty_rdd(extract_email_network(
-                utf8_decode_and_filter(self.sc.sequenceFile(
-                '/user/ufac001/project1920/samples/enron1.seq'))))
+        # result = self.utf8_decode_and_filter(self.sc.sequenceFile(
+        #         '/user/ufac001/project1920/samples/enron1.seq'))
+        result = self.pretty_rdd(extract_email_network(
+                    self.utf8_decode_and_filter(self.sc.sequenceFile(
+                        '/user/ufac001/project1920/samples/enron1.seq'))))
 
         self.assertEqual(result, 
             '''
@@ -66,9 +70,9 @@ class TestProjectCode(unittest.TestCase):
         )
 
     def test_Q2_enron20(self):
-        result = pretty_rdd(convert_to_weighted_network(
+        result = self.pretty_rdd(convert_to_weighted_network(
                 extract_email_network(
-                utf8_decode_and_filter(self.sc.sequenceFile(
+                self.utf8_decode_and_filter(self.sc.sequenceFile(
                 '/user/ufac001/project1920/samples/enron20.seq'))), 
                 (datetime(2000, 10, 1, tzinfo = timezone.utc), 
                 datetime(2001, 9, 1, tzinfo = timezone.utc))))
@@ -87,10 +91,10 @@ class TestProjectCode(unittest.TestCase):
         )
 
     def test_Q2_enron1(self):
-        result = pretty_rdd(convert_to_weighted_network(
-                extract_email_network(
-                utf8_decode_and_filter(self.sc.sequenceFile(
-                '/user/ufac001/project1920/samples/enron1.seq')))))
+        result = self.pretty_rdd(convert_to_weighted_network(
+                    extract_email_network(
+                        self.utf8_decode_and_filter(self.sc.sequenceFile(
+                            '/user/ufac001/project1920/samples/enron1.seq')))))
 
         self.assertEqual(result,
         '''
@@ -104,9 +108,9 @@ class TestProjectCode(unittest.TestCase):
         )
 
     def test_Q3_1(self):
-        result = pretty_rdd(get_out_degrees(convert_to_weighted_network(
+        result = self.pretty_rdd(get_out_degrees(convert_to_weighted_network(
                 extract_email_network(
-                utf8_decode_and_filter(self.sc.sequenceFile(
+                self.utf8_decode_and_filter(self.sc.sequenceFile(
                 '/user/ufac001/project1920/samples/enron20.seq'))))))
 
         self.assertEqual(result,
@@ -140,9 +144,9 @@ class TestProjectCode(unittest.TestCase):
         )
 
     def test_Q3_2(self):
-        result = pretty_rdd(get_in_degrees(convert_to_weighted_network(
+        result = self.pretty_rdd(get_in_degrees(convert_to_weighted_network(
                 extract_email_network(
-                utf8_decode_and_filter(self.sc.sequenceFile(
+                self.utf8_decode_and_filter(self.sc.sequenceFile(
                 '/user/ufac001/project1920/samples/enron20.seq'))))))
 
         self.assertEqual(result,
@@ -176,9 +180,9 @@ class TestProjectCode(unittest.TestCase):
         )
 
     def test_Q4_1(self):
-        result = pretty_rdd(get_out_degree_dist(convert_to_weighted_network(
+        result = self.pretty_rdd(get_out_degree_dist(convert_to_weighted_network(
                 extract_email_network(
-                utf8_decode_and_filter(self.sc.sequenceFile(
+                self.utf8_decode_and_filter(self.sc.sequenceFile(
                 '/user/ufac001/project1920/samples/enron20.seq'))))))
 
         self.assertEqual(result,
@@ -193,9 +197,9 @@ class TestProjectCode(unittest.TestCase):
         )
 
     def test_Q4_2(self):
-        result = pretty_rdd(get_in_degree_dist(convert_to_weighted_network(
+        result = self.pretty_rdd(get_in_degree_dist(convert_to_weighted_network(
                 extract_email_network(
-                utf8_decode_and_filter(self.sc.sequenceFile(
+                self.utf8_decode_and_filter(self.sc.sequenceFile(
                 '/user/ufac001/project1920/samples/enron20.seq'))))))
 
         self.assertEqual(result,

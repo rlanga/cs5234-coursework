@@ -62,19 +62,23 @@ def get_out_degrees(rdd):
     return rdd.map(lambda node: (node[0], node[2])) \
         .reduceByKey(lambda x, y: x + y) \
         .map(lambda node: (node[1], node[0])) \
-        .sortBy(lambda node: e, ascending=False)
+        .sortBy(lambda node: node, ascending=False)
 
 # Q3.2: replace pass with your code         
 def get_in_degrees(rdd):
     return rdd.map(lambda node: (node[1], node[2])) \
         .reduceByKey(lambda x, y: x + y) \
         .map(lambda node: (node[1], node[0])) \
-        .sortBy(lambda node: e, ascending=False)
+        .sortBy(lambda node: node, ascending=False)
 
 # Q4.1: replace pass with your code            
 def get_out_degree_dist(rdd):
-    return rdd.reduceByKey(lambda x, y: x + y)
+    return get_out_degrees(rdd).map(lambda count: (count[0], 1)) \
+        .reduceByKey(lambda x, y: x + y) \
+        .sortBy(lambda d: d[0])
 
 # Q4.2: replace pass with your code
 def get_in_degree_dist(rdd):
-    return rdd.reduceByKey(lambda x, y: x + y)
+    return get_in_degrees(rdd).map(lambda count: (count[0], 1)) \
+        .reduceByKey(lambda x, y: x + y) \
+        .sortBy(lambda d: d[0])
