@@ -56,17 +56,26 @@ def convert_to_weighted_network(rdd, drange=None):
     return rdd.map(lambda header: ((header[0], header[1]), 1)) \
         .reduceByKey(lambda x, y: x + y) \
         .map(lambda header: (header[0][0], header[0][1], header[1]))
+        # .sortBy(lambda node: node[0])
 
 # Q3.1: replace pass with your code
 def get_out_degrees(rdd):
+    all_emails = rdd.flatMap(lambda node: [node[0], node[1]]) \
+        .map(lambda email: (email, 0)) \
+        .distinct()
     return rdd.map(lambda node: (node[0], node[2])) \
+        .union(all_emails) \
         .reduceByKey(lambda x, y: x + y) \
         .map(lambda node: (node[1], node[0])) \
         .sortBy(lambda node: node, ascending=False)
 
 # Q3.2: replace pass with your code         
 def get_in_degrees(rdd):
+    all_emails = rdd.flatMap(lambda node: [node[0], node[1]]) \
+        .map(lambda email: (email, 0)) \
+        .distinct()
     return rdd.map(lambda node: (node[1], node[2])) \
+        .union(all_emails) \
         .reduceByKey(lambda x, y: x + y) \
         .map(lambda node: (node[1], node[0])) \
         .sortBy(lambda node: node, ascending=False)

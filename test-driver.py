@@ -36,6 +36,7 @@ if __name__ == '__main__':
 
       
     # Q1 test
+    print('~~~~Q1~~~~')
     print(pretty_rdd(extract_email_network(
         utf8_decode_and_filter(sc.sequenceFile(
                 '/user/ufac001/project1920/samples/enron1.seq')))))
@@ -60,6 +61,7 @@ if __name__ == '__main__':
 # tzinfo=datetime.timezone(datetime.timedelta(-1, 61200))))
     
     # Q2 test
+    print('~~~~Q2-20~~~~')
     print(pretty_rdd(convert_to_weighted_network(
         extract_email_network(
         utf8_decode_and_filter(sc.sequenceFile(
@@ -77,6 +79,7 @@ if __name__ == '__main__':
 # ('stuart.staley@enron.com', 'george.mcclellan@enron.com', 1)
 
     # Q2 test
+    print('~~~~Q2-1~~~~')
     print(pretty_rdd(convert_to_weighted_network(
         extract_email_network(
         utf8_decode_and_filter(sc.sequenceFile(
@@ -96,6 +99,7 @@ if __name__ == '__main__':
     (lambda rdd: rdd.cache() if rdd else None)(rdd)
     
     # Q3.1
+    print('~~~~Q3.1~~~~')
     print(pretty_rdd(get_out_degrees(convert_to_weighted_network(rdd))))
 # Expected output:
 # (26, 'george.mcclellan@enron.com')
@@ -125,6 +129,7 @@ if __name__ == '__main__':
 # (0, 'all.houston@enron.com')
 
     # Q3.2
+    print('~~~~Q3.2~~~~')
     print(pretty_rdd(get_in_degrees(convert_to_weighted_network(rdd))))
 # Expected output
 # (15, 'mike.mcconnell@enron.com')
@@ -154,6 +159,7 @@ if __name__ == '__main__':
 # (0, 'bill.cordes@enron.com')
     
     # Q4.1
+    print('~~~~Q4.1~~~~')
     print(pretty_rdd(get_out_degree_dist(convert_to_weighted_network(rdd))))
 # Expected output
 # (0, 14)
@@ -164,6 +170,7 @@ if __name__ == '__main__':
 # (26, 1)    
     
     # Q4.2
+    print('~~~~Q4.2~~~~')
     print(pretty_rdd(get_in_degree_dist(convert_to_weighted_network(rdd))))
 # Expected output
 # (0, 8)
