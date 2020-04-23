@@ -23,7 +23,7 @@ def date_to_dt(date):
 # Q1: replace pass with your code
 def extract_email_network(rdd):
     # Helper functions to parse emails into Tuples
-    email_regex = '([!#$%&\'*+-/=?^-`{|}~.\w]+)@enron\.com'
+    email_regex = '([!#$%&\'*+-/=?^-`{|}~.\w]+)@(\w*\.)?enron\.com'
     valid_email = lambda s: True if re.compile(email_regex).fullmatch(s) else False
     concat_csv_strings = lambda s1, s2: '{},{}'.format(s1, s2)
     val_by_vec = lambda sender, recipients, time: [(sender,r, time) for r in recipients]
